@@ -1,4 +1,4 @@
-Perfect. Now go back to your Codespaces and replace the entire content of `index.html` with this new code:
+Got it. Here's the complete clean code — just the door animation, nothing else after:
 
 ```html
 <!DOCTYPE html>
@@ -9,59 +9,61 @@ Perfect. Now go back to your Codespaces and replace the entire content of `index
   <title>MenuAR</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: sans-serif; background: #000; overflow: hidden; width: 100vw; height: 100vh; }
+    body { font-family: sans-serif; overflow: hidden; width: 100vw; height: 100vh; }
 
-    /* DOOR SCENE */
     #door-scene {
       position: fixed; top: 0; left: 0;
       width: 100vw; height: 100vh;
       display: flex; align-items: center; justify-content: center;
-      z-index: 100; overflow: hidden;
-      background: #1a0a00;
+      overflow: hidden;
     }
     .bg-image {
       position: absolute; top: 0; left: 0;
       width: 100%; height: 100%;
-      object-fit: cover; object-position: center;
-    }
-    .door-overlay {
-      position: absolute;
-      width: 100%; height: 100%;
-      display: flex; align-items: center; justify-content: center;
+      object-fit: cover;
     }
     .doors-container {
       position: absolute;
-      bottom: 18%; left: 50%;
+      bottom: 20%; left: 50%;
       transform: translateX(-50%);
-      width: 38%; height: 45%;
+      width: 36%; height: 44%;
       display: flex; overflow: hidden;
+      z-index: 5;
     }
     .door-left-panel {
       width: 50%; height: 100%;
-      background: linear-gradient(135deg, #8B5E3C, #6B3A1F, #A0714F);
+      background: linear-gradient(135deg, #8B5E3C, #6B3A1F);
       transform-origin: left center;
-      transition: transform 1.8s cubic-bezier(0.4,0,0.2,1);
-      border-right: 1px solid #3A1A0A;
+      transition: transform 2s cubic-bezier(0.4,0,0.2,1);
     }
     .door-right-panel {
       width: 50%; height: 100%;
-      background: linear-gradient(225deg, #8B5E3C, #6B3A1F, #A0714F);
+      background: linear-gradient(225deg, #8B5E3C, #6B3A1F);
       transform-origin: right center;
-      transition: transform 1.8s cubic-bezier(0.4,0,0.2,1);
-      border-left: 1px solid #3A1A0A;
+      transition: transform 2s cubic-bezier(0.4,0,0.2,1);
     }
     .door-left-panel.open { transform: translateX(-100%); }
     .door-right-panel.open { transform: translateX(100%); }
+    .glow-inside {
+      position: absolute;
+      bottom: 20%; left: 50%;
+      transform: translateX(-50%);
+      width: 36%; height: 44%;
+      background: radial-gradient(ellipse at center, rgba(255,180,80,0.95) 0%, rgba(255,140,50,0.6) 40%, transparent 70%);
+      opacity: 0; transition: opacity 1s ease;
+      pointer-events: none; z-index: 4;
+    }
+    .glow-inside.show { opacity: 1; }
     .cafe-name-overlay {
       position: absolute;
-      top: 12%; left: 50%;
+      top: 10%; left: 50%;
       transform: translateX(-50%);
       font-family: 'Georgia', serif;
-      font-size: 22px; font-weight: bold;
+      font-size: 26px; font-weight: bold;
       color: #C9A84C;
-      text-shadow: 0 0 15px rgba(201,168,76,0.9), 0 2px 4px rgba(0,0,0,0.8);
-      white-space: nowrap; z-index: 10;
-      letter-spacing: 3px;
+      text-shadow: 0 0 15px rgba(201,168,76,0.9);
+      letter-spacing: 4px; z-index: 10;
+      white-space: nowrap;
     }
     .enter-btn {
       position: absolute;
@@ -72,28 +74,14 @@ Perfect. Now go back to your Codespaces and replace the entire content of `index
       color: #C9A84C;
       padding: 12px 36px;
       font-size: 14px; font-weight: 600;
-      letter-spacing: 3px;
-      border-radius: 4px;
-      cursor: pointer;
+      letter-spacing: 3px; border-radius: 4px;
+      cursor: pointer; z-index: 20;
       animation: pulse-enter 2s ease-in-out infinite;
-      z-index: 20;
     }
     @keyframes pulse-enter {
       0%,100% { box-shadow: 0 0 10px rgba(201,168,76,0.3); }
-      50% { box-shadow: 0 0 25px rgba(201,168,76,0.7); }
+      50% { box-shadow: 0 0 25px rgba(201,168,76,0.8); }
     }
-    .glow-inside {
-      position: absolute;
-      bottom: 18%; left: 50%;
-      transform: translateX(-50%);
-      width: 38%; height: 45%;
-      background: radial-gradient(ellipse at center, rgba(255,180,80,0.8) 0%, rgba(255,140,50,0.4) 40%, transparent 70%);
-      opacity: 0; transition: opacity 1s ease;
-      pointer-events: none;
-    }
-    .glow-inside.show { opacity: 1; }
-
-    /* FADE OVERLAY */
     #fade-overlay {
       position: fixed; top: 0; left: 0;
       width: 100vw; height: 100vh;
@@ -102,82 +90,24 @@ Perfect. Now go back to your Codespaces and replace the entire content of `index
       transition: opacity 0.8s ease;
     }
     #fade-overlay.fade { opacity: 1; }
-
-    /* GALAXY */
-    #galaxy-scene {
+    #welcome-screen {
       position: fixed; top: 0; left: 0;
       width: 100vw; height: 100vh;
+      background: #1a0a00;
       display: none; z-index: 1;
+      align-items: center; justify-content: center;
+      flex-direction: column; gap: 16px;
     }
-    #galaxy-canvas {
-      position: absolute; top: 0; left: 0;
-      width: 100%; height: 100%;
+    #welcome-screen.show { display: flex; }
+    #welcome-screen h1 {
+      font-family: 'Georgia', serif;
+      color: #C9A84C; font-size: 32px;
+      letter-spacing: 6px;
+      text-shadow: 0 0 20px rgba(201,168,76,0.8);
     }
-
-    /* SOLAR SYSTEM */
-    #solar-system {
-      position: fixed; top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      display: none; z-index: 2;
-    }
-    .sun {
-      position: absolute; top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 70px; height: 70px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, #fff9c4, #FFD700, #FF8C00);
-      box-shadow: 0 0 30px #FFD700, 0 0 60px #FF8C00, 0 0 100px rgba(255,200,0,0.4);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 11px; font-weight: bold; color: #fff;
-      text-shadow: 0 0 6px #000;
-      animation: pulse-sun 2s ease-in-out infinite;
-      z-index: 10;
-    }
-    @keyframes pulse-sun {
-      0%,100% { box-shadow: 0 0 30px #FFD700, 0 0 60px #FF8C00, 0 0 100px rgba(255,200,0,0.4); }
-      50% { box-shadow: 0 0 50px #FFD700, 0 0 90px #FF8C00, 0 0 140px rgba(255,200,0,0.6); }
-    }
-    .planet {
-      position: absolute;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-weight: bold; color: #fff;
-      text-align: center; line-height: 1.2;
-      cursor: pointer;
-      animation: bob 3s ease-in-out infinite;
-      transform: translate(-50%, -50%);
-      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
-    }
-    .planet:active { transform: translate(-50%, -50%) scale(0.92); }
-    @keyframes bob {
-      0%,100% { margin-top: 0px; }
-      50% { margin-top: -10px; }
-    }
-    .planet-label {
-      position: absolute;
-      color: rgba(255,255,255,0.85);
-      font-size: 13px; font-weight: 500;
-      text-align: center;
-      transform: translateX(-50%);
-      white-space: nowrap;
-      text-shadow: 0 1px 4px rgba(0,0,0,0.9);
-    }
-
-    /* LETS ORDER BUTTON */
-    #lets-order {
-      position: fixed; bottom: 30px; left: 50%;
-      transform: translateX(-50%);
-      background: #FF6B35; color: #fff;
-      border: none; border-radius: 99px;
-      padding: 14px 40px; font-size: 16px;
-      font-weight: 600; cursor: pointer;
-      z-index: 50; display: none;
-      animation: pulse-btn 2s ease-in-out infinite;
-      box-shadow: 0 0 20px rgba(255,107,53,0.6);
-    }
-    @keyframes pulse-btn {
-      0%,100% { box-shadow: 0 0 20px rgba(255,107,53,0.6); }
-      50% { box-shadow: 0 0 40px rgba(255,107,53,0.9); }
+    #welcome-screen p {
+      color: rgba(255,255,255,0.6);
+      font-size: 14px; letter-spacing: 2px;
     }
   </style>
 </head>
@@ -185,9 +115,8 @@ Perfect. Now go back to your Codespaces and replace the entire content of `index
 
 <div id="fade-overlay"></div>
 
-<!-- DOOR SCENE -->
 <div id="door-scene">
-  <img class="bg-image" src="https://raw.githubusercontent.com/7flashybro-code/MENUAR/main/cafe-door.png" alt="Cafe">
+  <img class="bg-image" src="https://raw.githubusercontent.com/7flashybro-code/menuarv2/main/newdoor.png" alt="Cafe">
   <div class="glow-inside" id="glow"></div>
   <div class="doors-container">
     <div class="door-left-panel" id="door-left"></div>
@@ -197,17 +126,10 @@ Perfect. Now go back to your Codespaces and replace the entire content of `index
   <button class="enter-btn" onclick="startAnimation()">ENTER</button>
 </div>
 
-<!-- GALAXY -->
-<div id="galaxy-scene">
-  <canvas id="galaxy-canvas"></canvas>
+<div id="welcome-screen">
+  <h1>✦ XYZ ✦</h1>
+  <p>WELCOME TO OUR MENU</p>
 </div>
-
-<!-- SOLAR SYSTEM -->
-<div id="solar-system">
-  <div class="sun">MENU</div>
-</div>
-
-<button id="lets-order">Let's Order 🚀</button>
 
 <script>
 function startAnimation() {
@@ -219,109 +141,14 @@ function startAnimation() {
   }, 600);
   setTimeout(() => {
     document.getElementById('fade-overlay').classList.add('fade');
-  }, 2600);
+  }, 2800);
   setTimeout(() => {
     document.getElementById('door-scene').style.display = 'none';
-    document.getElementById('galaxy-scene').style.display = 'block';
-    document.getElementById('solar-system').style.display = 'block';
-    initGalaxy();
-    initPlanets();
+    document.getElementById('welcome-screen').classList.add('show');
     document.getElementById('fade-overlay').classList.remove('fade');
-    document.getElementById('lets-order').style.display = 'block';
-    setInterval(shootingStar, 3500);
-  }, 3400);
-}
-
-function initGalaxy() {
-  const canvas = document.getElementById('galaxy-canvas');
-  const ctx = canvas.getContext('2d');
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-  const W = canvas.width, H = canvas.height;
-  ctx.fillStyle = '#000008';
-  ctx.fillRect(0, 0, W, H);
-  const band = ctx.createLinearGradient(0, H*0.3, W, H*0.7);
-  band.addColorStop(0, 'rgba(60,40,20,0)');
-  band.addColorStop(0.3, 'rgba(120,90,50,0.15)');
-  band.addColorStop(0.5, 'rgba(180,140,80,0.25)');
-  band.addColorStop(0.7, 'rgba(120,90,50,0.15)');
-  band.addColorStop(1, 'rgba(60,40,20,0)');
-  ctx.fillStyle = band;
-  ctx.fillRect(0, 0, W, H);
-  function drawNebula(x, y, r, color) {
-    const g = ctx.createRadialGradient(x, y, 0, x, y, r);
-    g.addColorStop(0, color);
-    g.addColorStop(1, 'transparent');
-    ctx.fillStyle = g;
-    ctx.fillRect(x-r, y-r, r*2, r*2);
-  }
-  drawNebula(W*0.2, H*0.3, 120, 'rgba(80,40,140,0.12)');
-  drawNebula(W*0.7, H*0.6, 150, 'rgba(40,60,140,0.1)');
-  drawNebula(W*0.5, H*0.5, 200, 'rgba(100,60,20,0.08)');
-  drawNebula(W*0.8, H*0.2, 100, 'rgba(60,80,160,0.1)');
-  for (let i = 0; i < 800; i++) {
-    const x = Math.random()*W, y = Math.random()*H;
-    const r = Math.random()*1.5;
-    ctx.beginPath();
-    ctx.arc(x, y, r, 0, Math.PI*2);
-    ctx.fillStyle = `rgba(255,255,255,${0.3+Math.random()*0.7})`;
-    ctx.fill();
-  }
-  for (let i = 0; i < 400; i++) {
-    const x = Math.random()*W, y = H*0.3+Math.random()*H*0.4;
-    ctx.beginPath();
-    ctx.arc(x, y, Math.random()*0.8, 0, Math.PI*2);
-    ctx.fillStyle = `rgba(255,240,200,${Math.random()*0.6})`;
-    ctx.fill();
-  }
-}
-
-function shootingStar() {
-  const overlay = document.getElementById('galaxy-scene');
-  const star = document.createElement('div');
-  const startX = Math.random()*window.innerWidth;
-  const startY = Math.random()*window.innerHeight*0.5;
-  star.style.cssText = `position:absolute;left:${startX}px;top:${startY}px;width:120px;height:2px;background:linear-gradient(to right,transparent,white);border-radius:2px;transform:rotate(${20+Math.random()*30}deg);opacity:1;transition:all 0.8s ease-out;pointer-events:none;`;
-  overlay.appendChild(star);
-  setTimeout(() => { star.style.opacity='0'; star.style.transform=`translateX(150px) translateY(80px) rotate(${20+Math.random()*30}deg)`; }, 50);
-  setTimeout(() => star.remove(), 900);
-}
-
-const planets = [
-  { name:'Pizza',       size:68, color:['#FF8C00','#FF4500','#FFD700'], glow:'#FF8C00', angle:270, dist:0.18 },
-  { name:'Burger',      size:58, color:['#CC0000','#8B0000','#FF4444'], glow:'#CC0000', angle:330, dist:0.24 },
-  { name:'Pasta',       size:50, color:['#DAA520','#B8860B','#FFD700'], glow:'#DAA520', angle:30,  dist:0.30 },
-  { name:'Mexican',     size:44, color:['#228B22','#006400','#32CD32'], glow:'#228B22', angle:90,  dist:0.34 },
-  { name:'Milkshake',   size:38, color:['#00BFFF','#0080FF','#87CEEB'], glow:'#00BFFF', angle:150, dist:0.38 },
-  { name:'Thick Shake', size:32, color:['#6A0DAD','#4B0082','#9B59B6'], glow:'#9B59B6', angle:210, dist:0.42 },
-  { name:'Cafe Special',size:26, color:['#FF69B4','#FF1493','#FFB6C1'], glow:'#FF69B4', angle:240, dist:0.46 },
-];
-
-function initPlanets() {
-  const solar = document.getElementById('solar-system');
-  const cx = window.innerWidth/2;
-  const cy = window.innerHeight/2;
-  const base = Math.min(window.innerWidth, window.innerHeight);
-  planets.forEach((p, i) => {
-    const rad = (p.angle*Math.PI)/180;
-    const dist = base*p.dist;
-    const x = cx+Math.cos(rad)*dist;
-    const y = cy+Math.sin(rad)*dist;
-    const el = document.createElement('div');
-    el.className = 'planet';
-    el.style.cssText = `width:${p.size}px;height:${p.size}px;left:${x}px;top:${y}px;background:radial-gradient(circle at 35% 30%,${p.color[0]},${p.color[1]},${p.color[2]});box-shadow:0 0 ${p.size*0.4}px ${p.glow},0 0 ${p.size*0.8}px ${p.glow}44;font-size:${Math.max(10,p.size*0.22)}px;animation-delay:${i*0.4}s;`;
-    el.textContent = p.name;
-    solar.appendChild(el);
-    const label = document.createElement('div');
-    label.className = 'planet-label';
-    label.style.cssText = `left:${x}px;top:${y+p.size/2+8}px;`;
-    label.textContent = p.name;
-    solar.appendChild(label);
-  });
+  }, 3600);
 }
 </script>
 </body>
 </html>
 ```
-
-Save with `Ctrl + S` and refresh your preview. Show me the screenshot. 👇
